@@ -61,10 +61,6 @@
             app:touchAnchorSide="top"
             app:dragDirection="dragUp" />
 
-<!--        <OnClick-->
-<!--            app:motionTarget="@+id/actor"-->
-<!--            app:clickAction="transitionToEnd"/>-->
-
     </Transition>
 
 </MotionScene>

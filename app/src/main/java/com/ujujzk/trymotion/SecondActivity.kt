@@ -22,7 +22,7 @@ class SecondActivity : AppCompatActivity() {
             }
 
             override fun onTransitionChange(layout: MotionLayout?, startId: Int, endId: Int, progress: Float) {
-                seekbar.progress = ceil(progress * 100).toInt()
+                progress_bar.progress = ceil(progress * 100).toInt()
             }
 
             override fun onTransitionTrigger(layout: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
