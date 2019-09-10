@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/starting_set">
+        <Constraint android:id="@+id/cover"
+            android:layout_width="60dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="32dp"
+            android:elevation="3dp"
+            app:layout_constraintBottom_toTopOf="@+id/sheet"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/sheet"
+            app:layout_constraintTop_toTopOf="@+id/sheet"
+            />
+        <Constraint android:id="@+id/sheet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="300dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/ending_set">
+
+        <Constraint android:id="@+id/cover"
+            android:layout_width="60dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="32dp"
+            android:elevation="1dp"
+            app:layout_constraintBottom_toTopOf="@+id/sheet"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/sheet"
+            app:layout_constraintTop_toTopOf="@+id/sheet"
+            />
+        <Constraint android:id="@+id/sheet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="130dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+    </ConstraintSet>
+
+    <Transition
+        android:id="@+id/my_transition"
+        app:constraintSetStart="@+id/starting_set"
+        app:constraintSetEnd="@+id/ending_set"
+        app:duration="2000">
+
+
+        <KeyFrameSet >
+            <KeyPosition
+                app:motionTarget="@+id/cover"
+                app:framePosition="40"
+                app:keyPositionType="deltaRelative"
+                app:percentY="1.0" />
+
+            <KeyAttribute
+                app:motionTarget="@+id/cover"
+                app:framePosition="80"
+                android:elevation="1dp"/>
+
+        </KeyFrameSet>
+
+
+        <OnSwipe
+            app:touchAnchorId="@+id/sheet"
+            app:touchAnchorSide="top"
+            app:dragDirection="dragUp" />
+
+    </Transition>
+
+</MotionScene>
