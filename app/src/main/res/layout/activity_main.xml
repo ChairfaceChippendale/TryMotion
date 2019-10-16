@@ -1,56 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.constraintlayout.motion.widget.MotionLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/motion_container"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:showPaths="true"
-    app:layoutDescription="@xml/scene_second">
 
-    <View
-        android:id="@+id/actor1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        />
+   >
 
-    <View
-        android:id="@+id/actor2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_light"
-        />
 
-    <View
-        android:id="@+id/actor3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        />
 
-    <View
-        android:id="@+id/actor4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_dark"
-        />
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:max="100"
-        tools:progress="2"
-        android:alpha=".5"
-        android:progressTint="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-
-</androidx.constraintlayout.motion.widget.MotionLayout>
+</FrameLayout>

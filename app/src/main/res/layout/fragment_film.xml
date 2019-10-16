@@ -3,35 +3,25 @@
 <androidx.constraintlayout.motion.widget.MotionLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/motion_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_dark"
-    tools:showPaths="true"
-    app:layoutDescription="@xml/scene_space_card">
+    android:background="#9C27B0"
+    app:layoutDescription="@xml/scene_film">
 
     <View
-        android:id="@+id/card"
-        android:transformPivotX="200dp"
+        android:id="@+id/cover"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_light"
+        android:background="@drawable/bg_rounded_shape_red"
         />
 
     <View
-        android:id="@+id/bottom"
+        android:id="@+id/sheet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:elevation="2dp"
+        android:background="@drawable/bg_rounded_shape_white"
         />
-
-    <Button
-        android:id="@+id/start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="start"
-        android:onClick="start"
-       />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

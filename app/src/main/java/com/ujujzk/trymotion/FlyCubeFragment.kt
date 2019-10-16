@@ -2,20 +2,31 @@ package com.ujujzk.trymotion
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.constraintlayout.motion.widget.MotionLayout
-import kotlinx.android.synthetic.main.motion.*
+import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.fragment_fly_cube.*
 import kotlin.math.ceil
 
 
 /**
  * https://code.tutsplus.com/ru/tutorials/creating-animations-with-motionlayout-for-android--cms-31497
  */
-class SecondActivity : AppCompatActivity() {
+class FlyCubeFragment : Fragment(), Backable {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.motion)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_fly_cube, container, false)
+
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         motion_container.setTransitionListener(object : MotionLayout.TransitionListener{
             override fun onTransitionStarted(layout: MotionLayout?, p1: Int, p2: Int) {
@@ -36,8 +47,9 @@ class SecondActivity : AppCompatActivity() {
         })
     }
 
-//    fun start(v: View){
-//        motion_container.transitionToEnd()
-//    }
+
+    override fun goBack() {
+        (activity as? MainRouter)?.goToMenu()
+    }
 
 }
