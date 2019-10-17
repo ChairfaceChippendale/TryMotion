@@ -15,8 +15,7 @@ import com.ujujzk.trymotion.R
 import kotlin.math.max
 import kotlin.math.min
 
-class SeekerMono: View {
-    // region Properties
+class SeekerMono : View {
 
     /**
      * The paint to draw the horizontal tracks with.
@@ -24,7 +23,6 @@ class SeekerMono: View {
     private val trackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
     }
-
 
     /**
      * Holds the amount of changed value of a thumb while dragging it.
@@ -37,19 +35,19 @@ class SeekerMono: View {
     var trackThickness: Int
 
     /**
-     * The thickness of the selected range of horizontal track.
-     */
-    var trackSelectedThickness: Int
-
-    /**
      * Color of horizontal track.
      */
     var trackColor: Int
 
     /**
-     * Color of the selected range of horizontal track.
+     * Color of the part of the track from [minOpenValue] to [thumbValue].
      */
-    var trackSelectedColor: Int
+    var trackLeftOpenColor: Int
+
+    /**
+     * Color of the part of the track from [thumbValue] to [maxOpenValue].
+     */
+    var trackRightOpenColor: Int
 
     /**
      * The acceptable touch radius around thumbs in pixels.
@@ -72,42 +70,57 @@ class SeekerMono: View {
     var trackRoundedCaps: Boolean = false
 
     /**
-     * If the selected range track should have rounded caps.
+     * The minimum value on the track.
      */
-    var trackSelectedRoundedCaps: Boolean = false
-
-    /**
-     * Pixel offset of the min thumb
-     */
-    var thumbOffset: Point
-
-
-    /**
-     * The minimum range to be selected
-     */
-    var maxReachableValue: Int
-        set(value) {
-            field = max(value, max)
-            thumbValue = min(thumbValue, maxReachableValue)
-        }
-
-    /**
-     * The maximum value of thumbs which can also be considered as the maximum possible range.
-     */
-    var max: Int
+    var minValue: Int
         set(value) {
             field = value
-            maxReachableValue = min(maxReachableValue, field)
-            thumbValue = min(maxReachableValue, thumbValue)
-        }
-    /**
-     * Holds the value of min thumb.
-     */
-    private var thumbValue: Int = 0
-        set(value){
-            field = min(value, maxReachableValue)
+            minOpenValue = max(minOpenValue, field)
+            onValueChanged()
         }
 
+    /**
+     * The minimum value thumb can reach
+     */
+    var minOpenValue: Int
+        set(value) {
+            field = max(minValue, value)
+            field = min(maxOpenValue, field)
+            thumbValue = max(thumbValue, field)
+            onValueChanged()
+        }
+
+    /**
+     * Holds the value of thumb.
+     */
+    private var thumbValue: Int = 0
+        set(value) {
+            field = min(value, maxOpenValue)
+            field = max(value, minOpenValue)
+            invalidate()
+            onValueChanged()
+        }
+
+    /**
+     * The maximum value thumb can reach
+     */
+    var maxOpenValue: Int
+        set(value) {
+            field = min(value, maxValue)
+            field = max(minOpenValue, field)
+            thumbValue = min(thumbValue, field)
+            onValueChanged()
+        }
+
+    /**
+     * The maximum value on the track.
+     */
+    var maxValue: Int
+        set(value) {
+            field = value
+            maxOpenValue = min(maxOpenValue, field)
+            onValueChanged()
+        }
 
     /**
      * Holds the last value of [thumbValue] in order to send the callback updates
@@ -115,71 +128,110 @@ class SeekerMono: View {
      */
     private var lastThumbValue = thumbValue
 
-
     /**
      * A callback receiver for view changes.
      */
     var seekBarChangeListener: SeekBarChangeListener? = null
 
 
-    @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
+    @JvmOverloads
+    constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+            : super(context, attrs, defStyleAttr) {
+
         val res = context.resources
         val defaultTrackThickness = res.getDimensionPixelSize(R.dimen.rsb_trackDefaultThickness)
-        val defaultSidePadding = res.getDimensionPixelSize(R.dimen.rsb_defaultSidePadding)
-        val defaultTouchRadius = res.getDimensionPixelSize(R.dimen.rsb_touchRadius)
-        val defaultTrackColor = ContextCompat.getColor(context, R.color.rsb_trackDefaultColor)
-        val defaultSelectedTrackColor = ContextCompat.getColor(context, R.color.rsb_trackSelectedDefaultColor)
-        val defaultThumb = ContextCompat.getDrawable(context, R.drawable.seeker_thumb_24dp)!!
 
-        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.SeekerMono, 0, 0)
-        try {
-            max = extractMaxValue(a)
-            maxReachableValue = extractMinRange(a)
-            sidePadding = extractSidePadding(a, defaultSidePadding)
-            touchRadius = extractTouchRadius(a, defaultTouchRadius)
-            trackThickness = extractTrackThickness(a, defaultTrackThickness)
-            trackSelectedThickness = extractTrackSelectedThickness(a, defaultTrackThickness)
-            trackColor = extractTrackColor(a, defaultTrackColor)
-            trackSelectedColor = extractTrackSelectedColor(a, defaultSelectedTrackColor)
-            thumbDrawable = extractThumbDrawable(a, defaultThumb)
-            thumbOffset = extractThumbOffset(a)
-            trackRoundedCaps = extractTrackRoundedCaps(a)
-            trackSelectedRoundedCaps = extractTrackSelectedRoundedCaps(a)
-            val initialThumbValue = extractInitialThumbValue(a)
-            if (initialThumbValue != -1) {
-                thumbValue = max(0, initialThumbValue)
-            }
-        } finally {
-            a.recycle()
-        }
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.SeekerMono, defStyleAttr, 0)
+
+        minValue = a.getInteger(R.styleable.SeekerMono_rm_minValue, 0)
+        maxValue = a.getInteger(R.styleable.SeekerMono_rm_maxValue, 100)
+
+        maxOpenValue = a.getInteger(R.styleable.SeekerMono_rm_maxOpenValue, 100)
+        minOpenValue = a.getInteger(R.styleable.SeekerMono_rm_minOpenValue, 0)
+
+        thumbValue = a.getInteger(R.styleable.SeekerMono_rm_initialThumbValue, 0)
+
+        sidePadding = a.getDimensionPixelSize(
+            R.styleable.SeekerMono_rm_sidePadding,
+            res.getDimensionPixelSize(R.dimen.rsb_defaultSidePadding)
+        )
+        touchRadius = a.getDimensionPixelSize(
+            R.styleable.SeekerMono_rm_touchRadius,
+            res.getDimensionPixelSize(R.dimen.rsb_touchRadius)
+        )
+        trackThickness = a.getDimensionPixelSize(
+            R.styleable.SeekerMono_rm_trackThickness,
+            defaultTrackThickness
+        )
+        trackColor = a.getColor(
+            R.styleable.SeekerMono_rm_trackColor,
+            ContextCompat.getColor(context, R.color.rsb_trackDefaultColor)
+        )
+        trackLeftOpenColor = ContextCompat.getColor(context, R.color.rsb_trackOpenDefaultColor)
+        trackRightOpenColor = ContextCompat.getColor(context, R.color.rsb_trackSelectedDefaultColor)
+
+        trackRoundedCaps = a.getBoolean(
+            R.styleable.SeekerMono_rm_trackRoundedCaps,
+            false
+        )
+
+        thumbDrawable = a.getDrawable(R.styleable.SeekerMono_rm_thumbDrawable)
+            ?: ContextCompat.getDrawable(context, R.drawable.seeker_thumb_24dp)!!
+
+        a.recycle()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        setMeasuredDimension(getDefaultSize(suggestedMinimumWidth, widthMeasureSpec), measureHeight(heightMeasureSpec))
+        setMeasuredDimension(
+            getDefaultSize(suggestedMinimumWidth, widthMeasureSpec),
+            measureHeight(heightMeasureSpec)
+        )
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val paddingLeft = this.paddingLeft + sidePadding
         val paddingRight = this.paddingRight + sidePadding
-        val width = width - paddingLeft - paddingRight
+        val trackWidth = width - paddingLeft - paddingRight
         val verticalCenter = height / 2f
-        val minimumX = paddingLeft + (thumbValue / max.toFloat()) * width
-        val maximumX = paddingLeft.toFloat()
+
+        val trackXStart = paddingLeft.toFloat()
+        val trackXEnd = (paddingLeft + trackWidth).toFloat()
+
+        val valueRange = maxValue - minValue
+        val openRange = maxOpenValue - minOpenValue
+
+        val closeLeftRange = minOpenValue - minValue
+        val openLeftRange = thumbValue - minOpenValue
+        val openRightRange = maxOpenValue - thumbValue
+        val closeRightRange = maxValue - maxOpenValue
+
+        val openXStart = paddingLeft.toFloat() + closeLeftRange.toFloat() * trackWidth / valueRange
+        val thumbX =
+            paddingLeft.toFloat() + (closeLeftRange + openLeftRange).toFloat() * trackWidth / valueRange
+        val openXEnd =
+            paddingLeft.toFloat() + (closeLeftRange + openLeftRange + openRightRange).toFloat() * trackWidth / valueRange
 
         // Draw full track
-        updatePaint(trackThickness, trackColor, trackRoundedCaps)
-        canvas.drawLine(paddingLeft + 0f, verticalCenter, paddingLeft + width.toFloat(), verticalCenter, trackPaint)
+        trackPaint.strokeWidth = trackThickness.toFloat()
+        trackPaint.strokeCap = if (trackRoundedCaps) Paint.Cap.ROUND else Paint.Cap.SQUARE
+        trackPaint.color = trackColor
+        canvas.drawLine(trackXStart, verticalCenter, trackXEnd, verticalCenter, trackPaint)
 
-        // Draw selected range of the track
-        updatePaint(trackSelectedThickness, trackSelectedColor, trackSelectedRoundedCaps)
-        canvas.drawLine(minimumX, verticalCenter, maximumX, verticalCenter, trackPaint)
+        //Draw left open track
+        trackPaint.color = trackLeftOpenColor
+        canvas.drawLine(openXStart, verticalCenter, thumbX, verticalCenter, trackPaint)
+
+        //Draw right open track
+        trackPaint.color = trackRightOpenColor
+        canvas.drawLine(thumbX, verticalCenter, openXEnd, verticalCenter, trackPaint)
 
         // Draw thumb at minimumX position
-        thumbDrawable.drawAtPosition(canvas, minimumX.toInt(), thumbOffset)
+        thumbDrawable.drawAtPosition(canvas, thumbX.toInt())
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         var changed = false
         val paddingLeft = this.paddingLeft + sidePadding
@@ -187,10 +239,10 @@ class SeekerMono: View {
         val width = width - paddingLeft - paddingRight
         val mx = when {
             event.x < paddingLeft -> 0
-            paddingLeft <= event.x && event.x <= (this.width - paddingRight) -> ((event.x - paddingLeft) / width * max).toInt()
-            else -> max
+            paddingLeft <= event.x && event.x <= (this.width - paddingRight) -> ((event.x - paddingLeft) / width * maxValue).toInt()
+            else -> maxValue
         }
-        val leftThumbX = (paddingLeft + (thumbValue / max.toFloat() * width)).toInt()
+        val leftThumbX = (paddingLeft + (thumbValue / maxValue.toFloat() * width)).toInt()
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 if (isInsideRadius(event, leftThumbX, height / 2, touchRadius)) {
@@ -202,7 +254,7 @@ class SeekerMono: View {
                 }
             }
             MotionEvent.ACTION_MOVE -> {
-                thumbValue = max(min(mx - offset, maxReachableValue), 0)
+                thumbValue = max(min(mx - offset, maxOpenValue), 0)
                 changed = true
             }
             MotionEvent.ACTION_UP -> {
@@ -216,32 +268,12 @@ class SeekerMono: View {
         }
 
         invalidate()
-        if (lastThumbValue != thumbValue ) {
+        if (lastThumbValue != thumbValue) {
             lastThumbValue = thumbValue
-            seekBarChangeListener?.onValueChanged(thumbValue)
+            onValueChanged()
         }
         return true
     }
-
-    // region Public functions
-
-    /**
-     * Updates the value of minimum thumb and redraws the view.
-     */
-    fun setMinThumbValue(value: Int) {
-        thumbValue = max(value, 0)
-        invalidate()
-    }
-
-    /**
-     * @return the current minimum value of selected range.
-     */
-    fun getMinThumbValue() = thumbValue
-
-
-
-
-
 
 
     /**
@@ -254,14 +286,6 @@ class SeekerMono: View {
         return (dx * dx) + (dy * dy) < (radius * radius)
     }
 
-    /**
-     * Updates the stroke width and color of the paint which is used for drawing tracks.
-     */
-    private fun updatePaint(strokeWidth: Int, color: Int, roundedCaps: Boolean) {
-        trackPaint.strokeWidth = strokeWidth.toFloat()
-        trackPaint.color = color
-        trackPaint.strokeCap = if (roundedCaps) Paint.Cap.ROUND else Paint.Cap.SQUARE
-    }
 
     /**
      * Calculates the height of the view based on the view parameters.
@@ -278,100 +302,60 @@ class SeekerMono: View {
         }
     }
 
-    // region Extension functions
     /**
      * Calculates and sets the drawing bounds for drawable and draws it on canvas.
      *
      * @param canvas the canvas to draw on
      * @param position position of the drawable's left edge in horizontal axis (in pixels)
-     * @param offset the pixel offset of the drawable
      */
-    private fun Drawable.drawAtPosition(canvas: Canvas, position: Int, offset: Point = Point(0, 0)) {
-        val left = position + offset.x
-        val top = ((height - intrinsicHeight) / 2) + offset.y
+    private fun Drawable.drawAtPosition(
+        canvas: Canvas,
+        position: Int
+    ) {
+        val left = position - thumbDrawable.intrinsicWidth / 2
+        val top = (height - intrinsicHeight) / 2
         setBounds(left, top, left + intrinsicWidth, top + intrinsicHeight)
         draw(canvas)
     }
-    // endregion
 
-    // region Attribute extractor functions
-    // These functions will extract the view attributes
-
-    private fun extractThumbDrawable(a: TypedArray, defaultValue: Drawable): Drawable {
-        return a.getDrawable(R.styleable.SeekerMono_rm_thumbDrawable) ?: defaultValue
-    }
-
-    private fun extractTrackSelectedColor(a: TypedArray, defaultValue: Int): Int {
-        return a.getColor(R.styleable.SeekerMono_rm_trackSelectedColor, defaultValue)
-    }
-
-    private fun extractTrackColor(a: TypedArray, defaultValue: Int): Int {
-        return a.getColor(R.styleable.SeekerMono_rm_trackColor, defaultValue)
-    }
-
-    private fun extractTrackSelectedThickness(a: TypedArray, defaultValue: Int): Int {
-        return a.getDimensionPixelSize(R.styleable.SeekerMono_rm_trackSelectedThickness, defaultValue)
-    }
-
-    private fun extractTrackThickness(a: TypedArray, defaultValue: Int): Int {
-        return a.getDimensionPixelSize(R.styleable.SeekerMono_rm_trackThickness, defaultValue)
-    }
-
-    private fun extractTouchRadius(a: TypedArray, defaultValue: Int): Int {
-        return a.getDimensionPixelSize(R.styleable.SeekerMono_rm_touchRadius, defaultValue)
-    }
-
-    private fun extractSidePadding(a: TypedArray, defaultValue: Int): Int {
-        return a.getDimensionPixelSize(R.styleable.SeekerMono_rm_sidePadding, defaultValue)
-    }
-
-    private fun extractTrackRoundedCaps(a: TypedArray): Boolean {
-        return a.getBoolean(R.styleable.SeekerMono_rm_trackRoundedCaps, false)
-    }
-
-    private fun extractTrackSelectedRoundedCaps(a: TypedArray): Boolean {
-        return a.getBoolean(R.styleable.SeekerMono_rm_trackSelectedRoundedCaps, false)
-    }
-
-    private fun extractMinRange(a: TypedArray): Int {
-        return a.getInteger(R.styleable.SeekerMono_rm_maxReachableValue, 1)
-    }
-
-    private fun extractMaxValue(a: TypedArray): Int {
-        return a.getInteger(R.styleable.SeekerMono_rm_max, 100)
-    }
-
-    private fun extractInitialThumbValue(a: TypedArray): Int {
-        return a.getInteger(R.styleable.SeekerMono_rm_initialThumbValue, -1)
-    }
-
-    private fun extractThumbOffset(a: TypedArray): Point {
-        val x = a.getDimensionPixelSize(R.styleable.SeekerMono_rm_thumbOffsetHorizontal, - thumbDrawable.intrinsicWidth / 2)
-        val y = a.getDimensionPixelSize(R.styleable.SeekerMono_rm_thumbOffsetVertical, 0)
-        return Point(x, y)
+    private fun onValueChanged() {
+        seekBarChangeListener?.onValueChanged(
+            minValue = minValue,
+            minOpenValue = minOpenValue,
+            thumbValue = thumbValue,
+            maxOpenValue = maxOpenValue,
+            maxValue = maxValue
+        )
     }
 
 
     /**
-     * This interface is used to set callbacks for actions in [SeekerMono]
+     * Is used to set callbacks for actions in [SeekerMono]
      */
     interface SeekBarChangeListener {
         /**
-         * Gets called when the user has started dragging min or max thumbs
+         * Gets called when the user has started dragging thumb
          */
-        fun onStartedSeeking()
+        fun onStartedSeeking() {}
 
         /**
-         * Gets called when the user has stopped dragging min or max thumb
+         * Gets called when the user has stopped dragging thumb
          */
-        fun onStoppedSeeking()
+        fun onStoppedSeeking() {}
 
         /**
-         * Gets called during the dragging of min or max value
+         * Gets called during the dragging of thumb
          *
          * @param minThumbValue the current minimum value of selected range
          * @param maxThumbValue the current maximum value of selected range
          */
-        fun onValueChanged(minValue: Int, minReachableValue: Int, thumbValue: Int, maxReachableValue: Int, maxValue: Int)
+        fun onValueChanged(
+            minValue: Int,
+            minOpenValue: Int,
+            thumbValue: Int,
+            maxOpenValue: Int,
+            maxValue: Int
+        ) {
+        }
     }
 }

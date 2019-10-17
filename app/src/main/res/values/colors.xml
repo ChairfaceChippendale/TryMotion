@@ -5,5 +5,6 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="rsb_trackDefaultColor">#cccccc</color>
+    <color name="rsb_trackOpenDefaultColor">#DF2626</color>
     <color name="rsb_trackSelectedDefaultColor">#fefefe</color>
 </resources>

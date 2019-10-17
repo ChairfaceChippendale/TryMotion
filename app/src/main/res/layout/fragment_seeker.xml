@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/motion_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#9C27B0"
     app:layoutDescription="@xml/scene_film">
-
-    <com.ujujzk.trymotion.seeker.Seeker
-        android:id="@+id/seeker_sk"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:rsb_maxThumbOffsetHorizontal="2dp"
-        app:rsb_minThumbOffsetHorizontal="-2dp" />
 
 
     <com.ujujzk.trymotion.seeker.SeekerMono
@@ -27,15 +17,60 @@
         android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seeker_sk"
-        app:rm_trackThickness="5dp"
-        app:rm_trackSelectedColor="@color/colorPrimary"
-        app:rm_trackSelectedThickness="5dp"
-        app:rm_initialThumbValue="10"
-        app:rm_maxReachableValue="30"
+        app:layout_constraintTop_toTopOf="parent"
+        app:rm_initialThumbValue="20"
+        app:rm_maxOpenValue="80"
+        app:rm_minOpenValue="10"
+        app:rm_trackThickness="5dp" />
 
+    <TextView
+        android:id="@+id/seeker_callback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/red_max_open_btn"
+        tools:text="init" />
 
-        />
+    <Button
+        android:id="@+id/inc_min_open_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+ min open"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/monoSeeker_sk" />
+
+    <Button
+        android:id="@+id/red_min_open_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="- min open"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inc_min_open_btn" />
+
+    <Button
+        android:id="@+id/inc_max_open_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+ max open"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/red_min_open_btn" />
+
+    <Button
+        android:id="@+id/red_max_open_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="- max open"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inc_max_open_btn" />
 
 
 

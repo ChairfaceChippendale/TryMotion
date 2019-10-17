@@ -23,19 +23,15 @@
 
     <declare-styleable name="SeekerMono">
         <attr name="rm_trackColor" format="color" />
-        <attr name="rm_trackSelectedColor" format="color" />
         <attr name="rm_trackThickness" format="dimension" />
         <attr name="rm_sidePadding" format="dimension" />
         <attr name="rm_touchRadius" format="dimension" />
-        <attr name="rm_trackSelectedThickness" format="dimension" />
-        <attr name="rm_thumbOffsetVertical" format="dimension" />
-        <attr name="rm_thumbOffsetHorizontal" format="dimension" />
         <attr name="rm_thumbDrawable" format="reference" />
-        <attr name="rm_minReachableValue" format="integer" />
-        <attr name="rm_maxReachableValue" format="integer" />
-        <attr name="rm_max" format="integer" />
+        <attr name="rm_minOpenValue" format="integer" />
+        <attr name="rm_maxOpenValue" format="integer" />
+        <attr name="rm_maxValue" format="integer" />
+        <attr name="rm_minValue" format="integer" />
         <attr name="rm_initialThumbValue" format="integer" />
         <attr name="rm_trackRoundedCaps" format="boolean" />
-        <attr name="rm_trackSelectedRoundedCaps" format="boolean" />
     </declare-styleable>
 </resources>
