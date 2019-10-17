@@ -27,6 +27,9 @@ class ControlFragment: Fragment(), Backable {
         fly_cube_btn.setOnClickListener {
             (activity as MainRouter).goToFluCube()
         }
+        seeker_btn.setOnClickListener {
+            (activity as MainRouter).goToSeeker()
+        }
     }
 
     override fun goBack() {

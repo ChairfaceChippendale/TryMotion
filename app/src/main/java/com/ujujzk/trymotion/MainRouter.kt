@@ -7,4 +7,5 @@ interface MainRouter {
     fun goToFilm()
     fun goToFluCube()
     fun goToSpaceCard()
+    fun goToSeeker()
 }

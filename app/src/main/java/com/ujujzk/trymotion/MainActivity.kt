@@ -38,6 +38,10 @@ class MainActivity : AppCompatActivity(), MainRouter {
         replaceFragment(SpaceCardFragment())
     }
 
+    override fun goToSeeker() {
+        replaceFragment(SeekerFragment())
+    }
+
     private fun replaceFragment(fragment: Fragment){
         if (supportFragmentManager.findFragmentByTag(fragment.javaClass.simpleName) == null){
             supportFragmentManager.beginTransaction()

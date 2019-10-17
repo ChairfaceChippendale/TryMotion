@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/motion_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#9C27B0"
+    app:layoutDescription="@xml/scene_film">
+
+    <com.ujujzk.trymotion.seeker.Seeker
+        android:id="@+id/seeker_sk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:rsb_maxThumbOffsetHorizontal="2dp"
+        app:rsb_minThumbOffsetHorizontal="-2dp" />
+
+
+    <com.ujujzk.trymotion.seeker.SeekerMono
+        android:id="@+id/monoSeeker_sk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seeker_sk"
+        app:rm_trackThickness="5dp"
+        app:rm_trackSelectedColor="@color/colorPrimary"
+        app:rm_trackSelectedThickness="5dp"
+        app:rm_initialThumbValue="10"
+        app:rm_maxReachableValue="30"
+
+
+        />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
