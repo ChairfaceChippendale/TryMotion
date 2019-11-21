@@ -30,6 +30,9 @@ class ControlFragment: Fragment(), Backable {
         seeker_btn.setOnClickListener {
             (activity as MainRouter).goToSeeker()
         }
+        outlined_btn.setOnClickListener {
+            (activity as MainRouter).goToOutlined()
+        }
     }
 
     override fun goBack() {

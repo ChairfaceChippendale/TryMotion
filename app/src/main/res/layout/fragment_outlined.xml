@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/motion_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient"
+    tools:showPaths="true"
+    app:layoutDescription="@xml/scene_outlined"
+   >
+
+    <View
+        android:id="@+id/sheet"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:background="@drawable/bg_rounded_shape_white"
+        />
+
+
+    <com.ujujzk.trymotion.outlined.OutlinedView
+        android:id="@+id/stroke_btn"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:background="#F50202"
+        android:elevation="3dp"
+       />
+
+
+
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

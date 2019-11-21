@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:motion="http://schemas.android.com/tools">
+
+    <ConstraintSet android:id="@+id/starting_set">
+
+        <Constraint android:id="@+id/sheet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="300dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+
+        <Constraint android:id="@+id/stroke_btn"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/sheet"
+            app:layout_constraintEnd_toEndOf="@+id/sheet"
+            app:layout_constraintTop_toTopOf="@+id/sheet"
+            >
+            <CustomAttribute
+                app:attributeName="backgroundColor"
+                app:customColorValue="#F70202" />
+        </Constraint>
+
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/ending_set">
+
+        <Constraint android:id="@+id/sheet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <Constraint android:id="@+id/stroke_btn"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+            <CustomAttribute
+                app:attributeName="backgroundColor"
+                app:customColorValue="#00D81B60" />
+        </Constraint>
+
+    </ConstraintSet>
+
+    <Transition
+        android:id="@+id/my_transition"
+        app:constraintSetStart="@+id/starting_set"
+        app:constraintSetEnd="@+id/ending_set"
+        app:duration="2000">
+
+        <OnSwipe
+            app:touchAnchorId="@+id/sheet"
+            app:touchAnchorSide="top"
+            app:dragDirection="dragUp" />
+
+    </Transition>
+
+</MotionScene>

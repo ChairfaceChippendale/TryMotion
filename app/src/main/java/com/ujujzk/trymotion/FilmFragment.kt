@@ -18,27 +18,6 @@ class FilmFragment: Fragment(), Backable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        motion_container.setTransitionListener(object : MotionLayout.TransitionListener{
-            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
-
-            }
-
-            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
-            }
-
-            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
-            }
-
-            override fun onTransitionCompleted(p0: MotionLayout?, currentId: Int) {
-                if(currentId == R.id.set_1) {
-                    motion_container.postDelayed({
-                        motion_container.transitionToState(R.id.set_2)
-                    }, 100)
-
-                }
-            }
-        })
-
     }
 
     override fun goBack() {

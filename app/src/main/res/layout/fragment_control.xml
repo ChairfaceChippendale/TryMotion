@@ -36,6 +36,13 @@
         android:layout_height="wrap_content"
         android:text="Seeker"/>
 
+    <Button
+        android:id="@+id/outlined_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Outlined"/>
+
+
 
 
 </LinearLayout>

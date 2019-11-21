@@ -3,6 +3,8 @@ package com.ujujzk.trymotion
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.ujujzk.trymotion.outlined.OutlinedFragment
+import com.ujujzk.trymotion.seeker.SeekerFragment
 
 
 class MainActivity : AppCompatActivity(), MainRouter {
@@ -20,6 +22,10 @@ class MainActivity : AppCompatActivity(), MainRouter {
 
     override fun goToMenu() {
         replaceFragment(ControlFragment())
+    }
+
+    override fun goToOutlined() {
+        replaceFragment(OutlinedFragment())
     }
 
     override fun goToSquares() {

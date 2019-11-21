@@ -8,4 +8,5 @@ interface MainRouter {
     fun goToFluCube()
     fun goToSpaceCard()
     fun goToSeeker()
+    fun goToOutlined()
 }

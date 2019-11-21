@@ -95,9 +95,18 @@ class SeekerMono : View {
      */
     private var thumbValue: Int = 0
         set(value) {
-            field = min(value, maxOpenValue)
-            field = max(value, minOpenValue)
-            invalidate()
+            when {
+                value < minOpenValue -> {
+                    field = minOpenValue
+                }
+                value > maxOpenValue -> {
+                    field = maxOpenValue
+                }
+                else -> {
+                    field = value
+                    invalidate()
+                }
+            }
             onValueChanged()
         }
 
@@ -254,7 +263,7 @@ class SeekerMono : View {
                 }
             }
             MotionEvent.ACTION_MOVE -> {
-                thumbValue = max(min(mx - offset, maxOpenValue), 0)
+                thumbValue = mx - offset
                 changed = true
             }
             MotionEvent.ACTION_UP -> {
@@ -319,7 +328,7 @@ class SeekerMono : View {
     }
 
     private fun onValueChanged() {
-        seekBarChangeListener?.onValueChanged(
+        seekBarChangeListener?.onDrug(
             minValue = minValue,
             minOpenValue = minOpenValue,
             thumbValue = thumbValue,
@@ -345,17 +354,9 @@ class SeekerMono : View {
 
         /**
          * Gets called during the dragging of thumb
-         *
-         * @param minThumbValue the current minimum value of selected range
-         * @param maxThumbValue the current maximum value of selected range
          */
-        fun onValueChanged(
-            minValue: Int,
-            minOpenValue: Int,
+        fun onDrug(minValue: Int, minOpenValue: Int,
             thumbValue: Int,
-            maxOpenValue: Int,
-            maxValue: Int
-        ) {
-        }
+            maxOpenValue: Int, maxValue: Int) {}
     }
 }
